@@ -1,0 +1,95 @@
+plugins {
+    id 'java'
+    id 'me.modmuss50.mod-publish-plugin' version '0.8.4'
+}
+
+def modName = project.findProperty('modName') as String
+def modVersion = project.findProperty('modVersion') as String
+version = modVersion
+
+def extraMcVersions = ((project.findProperty('publishExtraMcVersions') ?: '') as String)
+        .split(',')
+        .collect { it.trim() }
+        .findAll { it }
+
+repositories {
+    mavenCentral()
+}
+
+tasks.processResources {
+    def meta = ['mod_name': modName, 'version': modVersion]
+    filesMatching('pack.mcmeta') { expand(meta) }
+}
+
+def datapackArchiveName = "${modName}-${modVersion}.zip"
+
+tasks.register('buildDatapack', Zip) {
+    group = 'build'
+    dependsOn tasks.named('processResources')
+
+    def resourcesDir = sourceSets.main.output.resourcesDir
+    archiveFileName.set(datapackArchiveName)
+    destinationDirectory.set(layout.buildDirectory.dir('datapack'))
+
+    from(resourcesDir) {
+        include 'pack.mcmeta'
+        include 'data/**'
+    }
+}
+
+def changeLogFile = rootProject.file('CHANGELOG.md')
+def changelogText = ''
+if (changeLogFile.exists()) {
+    def fullText = changeLogFile.getText('UTF-8')
+    def quotedVersion = java.util.regex.Pattern.quote(modVersion)
+    def pattern = java.util.regex.Pattern.compile(
+            '## \\[' + quotedVersion + '\\] - \\d{4}-\\d{2}-\\d{2}\\r?\\n(.*?)(?=\\r?\\n---|## \\[|\\z)',
+            java.util.regex.Pattern.DOTALL
+    )
+    def matcher = pattern.matcher(fullText)
+    if (matcher.find()) {
+        changelogText = matcher.group(1).trim()
+    } else {
+        changelogText = fullText
+    }
+}
+
+publishMods {
+    file = tasks.named('buildDatapack').flatMap { it.archiveFile }
+    changelog = changelogText
+    version = modVersion
+    type = STABLE
+    displayName = "${modName} ${modVersion}"
+    maxRetries = 3
+    dryRun = (project.findProperty('publishDryRun') ?: 'false').toString().toBoolean()
+
+    modrinth {
+        accessToken = providers.environmentVariable('MODRINTH_API_KEY')
+        projectId = (project.findProperty('modrinthProjectId') ?: '')
+        modLoaders.set(["datapack"])
+        minecraftVersionRange {
+            start = project.findProperty('publishMcStart')
+            end = project.findProperty('publishMcEnd')
+        }
+        extraMcVersions.each { minecraftVersions.add(it) }
+        requires { slug = "mes-moogs-end-structures" }
+        requires { slug = "biomes-o-plenty" }
+    }
+
+    curseforge {
+        accessToken = providers.environmentVariable('CURSEFORGE_API_KEY')
+        projectId = (project.findProperty('curseforgeProjectId') ?: '')
+        projectSlug = (project.findProperty('curseforgeProjectSlug') ?: '')
+        modLoaders.set(["datapack"])
+        serverRequired = true
+        minecraftVersionRange {
+            start = project.findProperty('publishMcStart')
+            end = project.findProperty('publishMcEnd')
+        }
+        extraMcVersions.each { minecraftVersions.add(it) }
+    }
+}
+
+tasks.named('publishMods').configure {
+    dependsOn tasks.named('buildDatapack')
+}
