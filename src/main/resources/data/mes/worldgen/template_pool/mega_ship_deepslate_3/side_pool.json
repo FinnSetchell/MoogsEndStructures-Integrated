@@ -1,0 +1,19 @@
+{
+    "name": "mes:start_pool_middle",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "mes:mega_ship/v1_21_5/mega_ship_deepslate_3_middle",
+                "locations": {
+                    "1.21.2-1.21.4": "mes:mega_ship/mega_ship_deepslate_3_middle",
+                    "1.21.5-26.2": "mes:mega_ship/v1_21_5/mega_ship_deepslate_3_middle"
+                },
+                "processors": "minecraft:empty",
+                "projection": "rigid",
+                "element_type": "moogs_structures:versioned_single_pool_element"
+            }
+        }
+    ]
+}
