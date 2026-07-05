@@ -80,8 +80,6 @@ publishMods {
         accessToken = providers.environmentVariable('CURSEFORGE_API_KEY')
         projectId = (project.findProperty('curseforgeProjectId') ?: '')
         projectSlug = (project.findProperty('curseforgeProjectSlug') ?: '')
-        modLoaders.set(["datapack"])
-        serverRequired = true
         minecraftVersionRange {
             start = project.findProperty('publishMcStart')
             end = project.findProperty('publishMcEnd')
