@@ -8,6 +8,8 @@
                 "element_type": "moogs_structures:versioned_single_pool_element",
                 "location": "mes:1_21_0/bop/mega_ship/mega_ship_deepslate_3_end_side",
                 "locations": {
+                    "1.20-1.20.4": "mes:1_20_0/bop/mega_ship/mega_ship_deepslate_3_end_side",
+                    "1.20.5-1.20.6": "mes:1_20_5/bop/mega_ship/mega_ship_deepslate_3_end_side",
                     "1.21-26.3": "mes:1_21_0/bop/mega_ship/mega_ship_deepslate_3_end_side"
                 },
                 "processors": "minecraft:empty",
