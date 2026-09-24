@@ -1,6 +1,6 @@
 # Changelog
 
-## [4.6.0] - 2026-09-24
+## [4.7.0] - 2026-09-24
 
 ### Added
 - The Biomes O' Plenty mega ships now carry the same crews as the regular mega ships: a captain, sword guards and archers, rolled fresh every time a ship generates
