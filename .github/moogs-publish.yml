@@ -29,10 +29,14 @@ artifacts:
   - type: universal-jar
     distribution: github
   - type: config-pack
+    displayName: "MES - Biomes O' Plenty Compat Pack"   # the listing title, no "Config Pack"
     platforms:
       curseforge: { projectId: 1331777 }
       modrinth:   { projectId: atHHwlmX }
     includeAlpha: true
+    dependencies:                                       # sent to Modrinth only
+      - { modrinth: r4PuRGfV, type: required }          # Moog's End Structures
+      - { modrinth: HXF82T3G, type: required }          # Biomes O' Plenty
 targets:
   - branch: 1.21-datapack
     mc: { start: "1.20", end: "26.3" }
