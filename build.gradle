@@ -1,30 +1,69 @@
 plugins {
     id 'java'
-    id 'me.modmuss50.mod-publish-plugin' version '0.8.4'
 }
 
-def modName = project.findProperty('modName') as String
-def modVersion = project.findProperty('modVersion') as String
-version = modVersion
+group = "com.finndog"
 
-def extraMcVersions = ((project.findProperty('publishExtraMcVersions') ?: '') as String)
-        .split(',')
-        .collect { it.trim() }
-        .findAll { it }
+java {
+    withSourcesJar()
+}
+
+// gradle.properties is snake_case fleet-wide (release-actions docs/v2-contracts.md,
+// "Fleet conventions"). Publishing configuration lives in .github/moogs-publish.yml on
+// the default branch — Gradle's only job here is `./gradlew build` + `buildDatapack`.
+def modName = (project.findProperty('mod_name') ?: project.name) as String
+def mcVersion = project.findProperty('minecraft_version') as String
+def modId = project.findProperty('mod_id') as String
+version = project.findProperty('mod_version') as String
 
 repositories {
     mavenCentral()
 }
 
 tasks.processResources {
-    def meta = ['mod_name': modName, 'version': modVersion]
+    def meta = [
+            'version': version,
+            'mod_name': modName,
+            'mc_version': mcVersion,
+            'mod_id': modId,
+            'mod_description': project.findProperty('mod_description'),
+            'mod_homepage': project.findProperty('mod_homepage'),
+            'mod_sources': project.findProperty('mod_sources'),
+            'mod_issues': project.findProperty('mod_issues'),
+            'mod_discord': project.findProperty('mod_discord'),
+            'mod_kofi': project.findProperty('mod_kofi'),
+            'mod_curseforge': project.findProperty('mod_curseforge'),
+            'mod_modrinth': project.findProperty('mod_modrinth'),
+            'mod_releases': project.findProperty('mod_releases'),
+            'structure_lib_version_range': project.findProperty('structure_lib_version_range'),
+            'mes_version_range': project.findProperty('mes_version_range'),
+    ]
+    // Version and the other metadata values are expand() inputs, not file inputs, so
+    // Gradle cannot see them change. Without this, bumping mod_version leaves the
+    // previously expanded fabric.mod.json / mods.toml in place and the jar ships the
+    // OLD version string under a NEW file name.
+    inputs.properties(meta)
+    filesMatching('fabric.mod.json') { expand(meta) }
+    filesMatching('quilt.mod.json') { expand(meta) }
+    filesMatching('META-INF/*.toml') { expand(meta) }
     filesMatching('pack.mcmeta') { expand(meta) }
 }
 
-def datapackArchiveName = "${modName}-${modVersion}.zip"
+// Fleet-standard artifact filename: {ModName}-{loader}-{mc}-{version}. A universal jar has
+// no single loader, so `universal` fills the loader slot. Setting archivesName rather than
+// jar.archiveFileName keeps the sources jar on the same stem.
+base {
+    archivesName = "${modName}-universal-${mcVersion}"
+}
+
+// The datapack is what CurseForge and Modrinth get; the jar goes to GitHub releases only.
+// Both carry the same data. `datapack` fills the loader slot because it is the real
+// Modrinth loader tag the pack publishes under.
+def datapackArchiveName = "${modName}-datapack-${mcVersion}-${project.version}.zip"
 
 tasks.register('buildDatapack', Zip) {
     group = 'build'
+    description = 'Assembles the datapack zip from the processed mod resources.'
     dependsOn tasks.named('processResources')
 
     def resourcesDir = sourceSets.main.output.resourcesDir
@@ -35,59 +74,10 @@ tasks.register('buildDatapack', Zip) {
         include 'pack.mcmeta'
         include 'data/**'
     }
-}
-
-def changeLogFile = rootProject.file('CHANGELOG.md')
-def changelogText = ''
-if (changeLogFile.exists()) {
-    def fullText = changeLogFile.getText('UTF-8')
-    def quotedVersion = java.util.regex.Pattern.quote(modVersion)
-    def pattern = java.util.regex.Pattern.compile(
-            '## \\[' + quotedVersion + '\\] - \\d{4}-\\d{2}-\\d{2}\\r?\\n(.*?)(?=\\r?\\n---|## \\[|\\z)',
-            java.util.regex.Pattern.DOTALL
-    )
-    def matcher = pattern.matcher(fullText)
-    if (matcher.find()) {
-        changelogText = matcher.group(1).trim()
-    } else {
-        changelogText = fullText
+    // The mod's icon becomes the datapack's pack.png at the zip root.
+    from(resourcesDir) {
+        include "assets/${modId}/icon.png"
+        includeEmptyDirs = false
+        eachFile { it.path = 'pack.png' }
     }
-}
-
-publishMods {
-    file = tasks.named('buildDatapack').flatMap { it.archiveFile }
-    changelog = changelogText
-    version = modVersion
-    type = STABLE
-    displayName = "${modName} ${modVersion}"
-    maxRetries = 3
-    dryRun = (project.findProperty('publishDryRun') ?: 'false').toString().toBoolean()
-
-    modrinth {
-        accessToken = providers.environmentVariable('MODRINTH_API_KEY')
-        projectId = (project.findProperty('modrinthProjectId') ?: '')
-        modLoaders.set(["datapack"])
-        minecraftVersionRange {
-            start = project.findProperty('publishMcStart')
-            end = project.findProperty('publishMcEnd')
-        }
-        extraMcVersions.each { minecraftVersions.add(it) }
-        requires { slug = "mes-moogs-end-structures" }
-        requires { slug = "biomes-o-plenty" }
-    }
-
-    curseforge {
-        accessToken = providers.environmentVariable('CURSEFORGE_API_KEY')
-        projectId = (project.findProperty('curseforgeProjectId') ?: '')
-        projectSlug = (project.findProperty('curseforgeProjectSlug') ?: '')
-        minecraftVersionRange {
-            start = project.findProperty('publishMcStart')
-            end = project.findProperty('publishMcEnd')
-        }
-        extraMcVersions.each { minecraftVersions.add(it) }
-    }
-}
-
-tasks.named('publishMods').configure {
-    dependsOn tasks.named('buildDatapack')
 }

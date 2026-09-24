@@ -1,0 +1,40 @@
+# v2 publish manifest — FinnSetchell/MoogsEndStructures-Integrated
+# (the Biomes O' Plenty compat pack for Moog's End Structures). Schema per
+# release-actions docs/v2-contracts.md.
+#
+# The storefront listings are datapack listings, so the JAR ships as a GitHub
+# release asset only and the zip is what reaches CurseForge and Modrinth.
+schema: 1
+mod:
+  id: mesintegrated
+  displayName: "MES Biomes O' Plenty Compat"
+  environments: [Server]
+  name: MoogsEndStructuresIntegrated
+  validate: true
+platforms:
+  # The pack's own listings (verified live 2026-09-24).
+  curseforge: { projectId: 1331777, slug: mes-biomes-o-plenty-compat-pack }
+  modrinth:   { projectId: atHHwlmX, slug: mes-biomes-o-plenty-compat-pack }
+discord:
+  embedColor: "#3e0e49"
+  avatarUrl: "https://media.forgecdn.net/avatars/thumbnails/869/886/64/64/638285725964513688.png"
+  bannerUrl: "https://www.bisecthosting.com/images/CF/MES/BH_ME_HEADER.webp"
+  thumbnailUrl: "https://media.forgecdn.net/avatars/thumbnails/869/886/256/256/638285725964513688.png"
+  pingDefault: true
+dependencies:
+  - { modrinth: 1oUDhxuy, curseforge: moogs-structure-lib, type: required }
+  - { modrinth: r4PuRGfV, curseforge: moogs-end-structures, type: required }
+  - { modrinth: HXF82T3G, curseforge: biomes-o-plenty, type: required }
+artifacts:
+  - type: universal-jar
+    distribution: github
+  - type: config-pack
+    platforms:
+      curseforge: { projectId: 1331777 }
+      modrinth:   { projectId: atHHwlmX }
+    includeAlpha: true
+targets:
+  - branch: 1.21-datapack
+    mc: { start: "1.20", end: "26.3" }
+    java: 21
+    displaySuffix: "[UNIVERSAL]"
