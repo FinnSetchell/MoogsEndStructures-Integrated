@@ -6,11 +6,10 @@
             "weight": 1,
             "element": {
                 "element_type": "moogs_structures:versioned_single_pool_element",
-                "location": "mes:1_21_9/bop/mega_ship/mega_ship_deepslate_3_middle",
+                "location": "mes:1_21_5/bop/mega_ship/mega_ship_crashed_deepslate_middle",
                 "locations": {
-                    "1.21-1.21.4": "mes:1_21_0/bop/mega_ship/mega_ship_deepslate_3_middle",
-                    "1.21.5-1.21.8": "mes:1_21_5/bop/mega_ship/mega_ship_deepslate_3_middle",
-                    "1.21.9-26.3": "mes:1_21_9/bop/mega_ship/mega_ship_deepslate_3_middle"
+                    "1.21-1.21.4": "mes:1_21_0/bop/mega_ship/mega_ship_crashed_deepslate_middle",
+                    "1.21.5-26.3": "mes:1_21_5/bop/mega_ship/mega_ship_crashed_deepslate_middle"
                 },
                 "processors": "minecraft:empty",
                 "projection": "rigid"

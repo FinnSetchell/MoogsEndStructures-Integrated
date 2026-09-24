@@ -5,14 +5,14 @@
         {
             "weight": 1,
             "element": {
-                "location": "mes:mega_ship/v1_21_5/mega_ship_deepslate",
+                "element_type": "moogs_structures:versioned_single_pool_element",
+                "location": "mes:1_21_5/bop/mega_ship/mega_ship_deepslate",
                 "locations": {
-                    "1.21.2-1.21.4": "mes:mega_ship/mega_ship_deepslate",
-                    "1.21.5-26.2": "mes:mega_ship/v1_21_5/mega_ship_deepslate"
+                    "1.21-1.21.4": "mes:1_21_0/bop/mega_ship/mega_ship_deepslate",
+                    "1.21.5-26.3": "mes:1_21_5/bop/mega_ship/mega_ship_deepslate"
                 },
                 "processors": "minecraft:empty",
-                "projection": "rigid",
-                "element_type": "moogs_structures:versioned_single_pool_element"
+                "projection": "rigid"
             }
         }
     ]

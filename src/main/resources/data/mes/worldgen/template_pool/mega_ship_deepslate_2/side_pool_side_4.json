@@ -1,15 +1,14 @@
 {
-    "name": "mes:mega_ship_deepslate_3/mega_ship_deepslate_3_start_pool",
+    "name": "mes:start_pool_side",
     "fallback": "minecraft:empty",
     "elements": [
         {
             "weight": 1,
             "element": {
                 "element_type": "moogs_structures:versioned_single_pool_element",
-                "location": "mes:1_21_5/bop/mega_ship/mega_ship_deepslate_3",
+                "location": "mes:1_21_0/bop/mega_ship/mega_ship_deepslate_2_end_side_4",
                 "locations": {
-                    "1.21-1.21.4": "mes:1_21_0/bop/mega_ship/mega_ship_deepslate_3",
-                    "1.21.5-26.3": "mes:1_21_5/bop/mega_ship/mega_ship_deepslate_3"
+                    "1.21-26.3": "mes:1_21_0/bop/mega_ship/mega_ship_deepslate_2_end_side_4"
                 },
                 "processors": "minecraft:empty",
                 "projection": "rigid"
