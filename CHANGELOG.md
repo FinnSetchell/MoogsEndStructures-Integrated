@@ -11,6 +11,7 @@
 ### Fixed
 - The Biomes O' Plenty mega ships generate in full again alongside Moog's End Structures 2.1. Their ends, sides and upper decks had reverted to plain blocks, and the crashed deepslate ship had lost its Biomes O' Plenty look entirely
 - The second and third deepslate mega ships have their elytra display frames back
+- The second and third deepslate mega ships now use the same patterned banners as the regular ships
 
 ## [4.5.7] - 2026-07-04
 
