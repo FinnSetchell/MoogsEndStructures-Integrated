@@ -1,5 +1,5 @@
 {
-    "name": "mes:start_pool_middle",
+    "name": "mes:bop/mega_ship_deepslate/side_pool",
     "fallback": "minecraft:empty",
     "elements": [
         {

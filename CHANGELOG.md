@@ -1,12 +1,13 @@
 # Changelog
 
-## [4.7.0] - 2026-09-24
+## [4.7.0] - 2026-09-30
 
 ### Added
 - The Biomes O' Plenty mega ships now carry the same crews as the regular mega ships: a captain, sword guards and archers, rolled fresh every time a ship generates
 
 ### Changed
 - One pack now covers every Minecraft version from 1.20 through 26.3
+- Biomes O' Plenty mega ships now appear about half the time, with regular mega ships appearing the other half
 
 ### Fixed
 - The Biomes O' Plenty mega ships generate in full again alongside Moog's End Structures 2.1. Their ends, sides and upper decks had reverted to plain blocks, and the crashed deepslate ship had lost its Biomes O' Plenty look entirely
